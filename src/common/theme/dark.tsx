@@ -44,9 +44,12 @@ export const darkTheme: DefaultTheme = {
     readIconColor: "#0da9e5",
     unreadIconColor: "#b3b3b3",
     headerIconColor: "rgb(145, 145, 145)",
+    errorColor: "#dc3545",
   },
   alert: {
-    infoColor: "#085373",
+    infoColor: "rgba(255, 193, 7, 0.35)", // Sarı, daha canlı
+    successColor: "rgba(40, 167, 69, 0.35)", // Yeşil, daha canlı
+    errorColor: "rgba(220, 53, 69, 0.3)", // Kırmızı, daha canlı
     iconContainerColor: "rgba(241, 241, 242, 0.8)",
     closeIconColor: "rgba(241, 241, 242, 0.92)",
   },

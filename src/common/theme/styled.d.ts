@@ -44,9 +44,12 @@ declare module "styled-components" {
       readIconColor: string;
       unreadIconColor: string;
       headerIconColor: string;
+      errorColor: string;
     };
     alert: {
       infoColor: string;
+      successColor: string;
+      errorColor: string;
       iconContainerColor: string;
       closeIconColor: string;
     };

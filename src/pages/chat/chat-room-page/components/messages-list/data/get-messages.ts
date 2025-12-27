@@ -1,4 +1,5 @@
 import { MessageStatus } from "common/types/common.type";
+import { MessageType } from "common/types/message.type";
 
 export type Message = {
   id: string;
@@ -7,6 +8,9 @@ export type Message = {
   timestamp: string;
   messageStatus: MessageStatus;
   isOpponent: boolean;
+  type?: MessageType;
+  isStarred?: boolean;
+  isPinned?: boolean;
 };
 
 const messages: Message[] = [
@@ -17,6 +21,8 @@ const messages: Message[] = [
     timestamp: "08:58",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "2",
@@ -25,6 +31,8 @@ const messages: Message[] = [
     timestamp: "09:01",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "3",
@@ -33,6 +41,8 @@ const messages: Message[] = [
     timestamp: "09:05",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "4",
@@ -41,14 +51,18 @@ const messages: Message[] = [
     timestamp: "12:30",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: true,
   },
   {
     id: "5",
-    body: "Can you send me that file?",
+    body: "Check this image",
     date: "21/02/2023",
     timestamp: "15:42",
     messageStatus: "READ",
     isOpponent: true,
+    type: "image",
+    isStarred: false,
   },
   {
     id: "6",
@@ -57,6 +71,8 @@ const messages: Message[] = [
     timestamp: "10:12",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "7",
@@ -65,6 +81,8 @@ const messages: Message[] = [
     timestamp: "18:03",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "8",
@@ -73,6 +91,8 @@ const messages: Message[] = [
     timestamp: "13:25",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "9",
@@ -81,6 +101,8 @@ const messages: Message[] = [
     timestamp: "16:08",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "10",
@@ -89,6 +111,8 @@ const messages: Message[] = [
     timestamp: "20:12",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "11",
@@ -97,6 +121,8 @@ const messages: Message[] = [
     timestamp: "09:52",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "12",
@@ -105,6 +131,8 @@ const messages: Message[] = [
     timestamp: "14:27",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "13",
@@ -113,6 +141,8 @@ const messages: Message[] = [
     timestamp: "14:30",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "14",
@@ -121,6 +151,8 @@ const messages: Message[] = [
     timestamp: "11:45",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "15",
@@ -129,6 +161,8 @@ const messages: Message[] = [
     timestamp: "11:47",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "16",
@@ -137,6 +171,8 @@ const messages: Message[] = [
     timestamp: "11:50",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "17",
@@ -145,6 +181,8 @@ const messages: Message[] = [
     timestamp: "11:55",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "18",
@@ -153,6 +191,8 @@ const messages: Message[] = [
     timestamp: "16:35",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "19",
@@ -161,6 +201,8 @@ const messages: Message[] = [
     timestamp: "16:40",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "20",
@@ -169,6 +211,8 @@ const messages: Message[] = [
     timestamp: "16:42",
     messageStatus: "READ",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "21",
@@ -177,6 +221,8 @@ const messages: Message[] = [
     timestamp: "09:20",
     messageStatus: "READ",
     isOpponent: true,
+    type: "text",
+    isStarred: false,
   },
   {
     id: "22",
@@ -185,15 +231,27 @@ const messages: Message[] = [
     timestamp: "09:23",
     messageStatus: "DELIVERED",
     isOpponent: false,
+    type: "text",
+    isStarred: false,
   },
 ];
 
-export function getMessages(): Message[] {
+export function getMessages(types?: string[]): Message[] {
   const totalMessagesLength = messages.length;
   let randomNumber = Math.floor(Math.random() * totalMessagesLength);
 
   if (randomNumber > totalMessagesLength) randomNumber = totalMessagesLength;
   if (randomNumber === 1) randomNumber = 2; // so we always have atleast 1-2 messages.
 
-  return messages.slice(0, randomNumber);
+  let filteredMessages = messages.slice(0, randomNumber);
+
+  // Filter by types if provided
+  if (types && types.length > 0) {
+    filteredMessages = filteredMessages.filter((msg) => {
+      const msgType = msg.type || "text";
+      return types.includes(msgType);
+    });
+  }
+
+  return filteredMessages;
 }

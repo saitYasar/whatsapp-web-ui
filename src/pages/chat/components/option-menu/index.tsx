@@ -11,6 +11,7 @@ type OptionsMenuProps = {
   options: string[];
   position?: string;
   showPressed?: boolean;
+  onOptionClick?: (option: string) => void;
   [x: string]: any;
 };
 
@@ -25,6 +26,7 @@ export default function OptionsMenu(props: OptionsMenuProps) {
     iconClassName,
     position = "left",
     showPressed = true,
+    onOptionClick,
   } = props;
 
   const getBtnClassName = (): string => {
@@ -52,7 +54,15 @@ export default function OptionsMenu(props: OptionsMenuProps) {
       </Button>
       <Options className={getOptionsClassName()}>
         {options.map((option) => (
-          <Option key={option}>{option}</Option>
+          <Option
+            key={option}
+            onClick={() => {
+              onOptionClick?.(option);
+              setShowOptions(false);
+            }}
+          >
+            {option}
+          </Option>
         ))}
       </Options>
     </Container>

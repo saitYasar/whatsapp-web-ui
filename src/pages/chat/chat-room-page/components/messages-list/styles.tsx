@@ -1,5 +1,9 @@
 import styled, { css } from "styled-components";
 
+export const wrapperStyles = css`
+  z-index: 9;
+`;
+
 export const Container = styled.div`
   flex: 1;
   position: relative;
@@ -13,10 +17,6 @@ export const Container = styled.div`
     margin-right: 5px;
     margin-bottom: -1px;
   }
-`;
-
-export const wrapperStyles = css`
-  z-index: 9;
 `;
 
 export const DateWrapper = styled.div`
@@ -111,13 +111,85 @@ export const ChatMessage = styled.div`
   margin-bottom: 12px;
   font-size: 0.85rem;
   color: ${(props) => props.theme.common.mainHeadingColor};
-  width: fit-content;
-  max-width: 95%;
+  width: 100%;
   line-height: 20px;
   border-radius: 5px;
   position: relative;
   white-space: pre-line;
   display: flex;
+  flex-direction: column;
+`;
+
+export const ChatMessageContent = styled.div`
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  padding-right: 40px; /* Space for menu button */
+`;
+
+export const ChatMessageFiller = styled.span`
+  width: 65px;
+  display: inline-block;
+  height: 3px;
+  background: transparent;
+  flex-shrink: 0;
+`;
+
+export const ChatMessageFooter = styled.span`
+  display: flex;
+  align-items: center;
+  color: ${(props) => props.theme.common.subHeadingColor};
+  font-size: 0.7rem;
+  font-weight: 500;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+`;
+
+export const StarButton = styled.button<{ $isStarred: boolean }>`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  transition: all 0.2s;
+  opacity: ${(props) => (props.$isStarred ? 1 : 0.3)};
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .icon {
+    width: 14px;
+    height: 14px;
+    color: ${(props) =>
+      props.$isStarred
+        ? props.theme.common.tertiaryColor
+        : props.theme.common.subHeadingColor};
+    fill: ${(props) => (props.$isStarred ? props.theme.common.tertiaryColor : "none")};
+  }
+`;
+
+export const MessageActions = styled.div`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+`;
+
+export const ChatMessageWrapper = styled.div`
+  position: relative;
+  width: fit-content;
+  max-width: 95%;
 
   @media screen and (min-width: 1301px) {
     max-width: 65%;
@@ -130,22 +202,12 @@ export const ChatMessage = styled.div`
   @media screen and (min-width: 900px) and (max-width: 1000px) {
     max-width: 85%;
   }
-`;
 
-export const ChatMessageFiller = styled.span`
-  width: 65px;
-  display: inline-block;
-  height: 3px;
-  background: transparent;
-`;
+  &:hover ${MessageActions} {
+    opacity: 1;
+  }
 
-export const ChatMessageFooter = styled.span`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  right: 7px;
-  bottom: 3px;
-  color: ${(props) => props.theme.common.subHeadingColor};
-  font-size: 0.7rem;
-  font-weight: 500;
+  &:hover ${MessageActions} button {
+    opacity: 1;
+  }
 `;

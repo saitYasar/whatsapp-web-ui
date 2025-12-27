@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Icon from "common/components/icons";
 import {
   AboutItem,
@@ -23,6 +24,7 @@ type ProfileSectionProps = {
 
 export default function ProfileSection(props: ProfileSectionProps) {
   const { name, image } = props;
+  const { t } = useTranslation();
 
   return (
     <Wrapper>
@@ -35,7 +37,7 @@ export default function ProfileSection(props: ProfileSectionProps) {
 
       <Section>
         <HeadingWrapper>
-          <Heading>Media, Links and Documents</Heading>
+          <Heading>{t("profile.mediaLinksDocuments")}</Heading>
           <MediaButton>
             <Icon id="rightArrow" className="icon" />
           </MediaButton>
@@ -49,7 +51,7 @@ export default function ProfileSection(props: ProfileSectionProps) {
 
       <Section>
         <HeadingWrapper>
-          <Heading>About and phone number</Heading>
+          <Heading>{t("profile.aboutPhoneNumber")}</Heading>
         </HeadingWrapper>
         <ul>
           <AboutItem>
@@ -61,15 +63,15 @@ export default function ProfileSection(props: ProfileSectionProps) {
 
       <ActionSection>
         <Icon id="block" className="icon" />
-        <ActionText>Block</ActionText>
+        <ActionText>{t("profile.block")}</ActionText>
       </ActionSection>
       <ActionSection>
         <Icon id="thumbsDown" className="icon" />
-        <ActionText>Report contact</ActionText>
+        <ActionText>{t("profile.reportContact")}</ActionText>
       </ActionSection>
       <ActionSection>
         <Icon id="delete" className="icon" />
-        <ActionText>Delete chat</ActionText>
+        <ActionText>{t("profile.deleteChat")}</ActionText>
       </ActionSection>
     </Wrapper>
   );

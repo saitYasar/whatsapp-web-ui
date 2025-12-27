@@ -2,17 +2,45 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import ChatProvider from "pages/chat/context/chat";
+import ProtectedRoute from "common/components/ProtectedRoute";
 const ChatPage = React.lazy(() => import("pages/chat/chat-room-page"));
 const UnSelectedChatPage = React.lazy(() => import("pages/chat/unselected-page"));
+const LoginPage = React.lazy(() => import("pages/login"));
+const NotFoundPage = React.lazy(() => import("pages/404"));
+const BulkMessagePage = React.lazy(() => import("pages/bulk-message"));
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
     path: "/:id",
-    element: <ChatPage />,
+    element: (
+      <ProtectedRoute>
+        <ChatPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/bulk-message",
+    element: (
+      <ProtectedRoute>
+        <BulkMessagePage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/",
-    element: <UnSelectedChatPage />,
+    element: (
+      <ProtectedRoute>
+        <UnSelectedChatPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
 

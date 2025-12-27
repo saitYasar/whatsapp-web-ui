@@ -39,9 +39,8 @@ export const Avatar = styled.img`
   /* should refactor to avatar */
 `;
 
-export const ProfileWrapper = styled.div<{ onClick: any }>`
+export const ProfileWrapper = styled.div`
   flex: 1;
-  cursor: pointer;
 `;
 
 export const profileStyles = css`

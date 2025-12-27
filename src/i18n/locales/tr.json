@@ -1,0 +1,167 @@
+{
+  "splash": {
+    "title": "{{appShortName}}",
+    "subtitle": "Uçtan uca şifrelenmiş. Geliştiren",
+    "builtBy": "Sait Yaşar"
+  },
+  "unselectedChat": {
+    "title": "{{appName}}",
+    "description": "Telefonunuzu çevrimiçi tutmadan mesaj gönderin ve alın. WhatsApp'ı aynı anda 4 bağlantılı cihaz ve 1 telefon üzerinde kullanın.",
+    "builtBy": "Geliştiren"
+  },
+  "sidebar": {
+    "status": "Durum",
+    "newChat": "Yeni sohbet",
+    "menu": "Menü",
+    "newGroup": "Yeni grup",
+    "createRoom": "Oda oluştur",
+    "profile": "Profil",
+    "archived": "Arşivlenmiş",
+    "starred": "Yıldızlı",
+    "settings": "Ayarlar",
+    "logOut": "Çıkış yap",
+    "bulkMessage": "Toplu Mesaj",
+    "searchPlaceholder": "Ara veya yeni bir sohbet başlat",
+    "noContacts": "Kişi Yok",
+    "importContacts": "Google'dan Kişileri içe aktarabilirsiniz",
+    "learnMore": "Daha fazla bilgi edinin."
+  },
+  "chatNotes": {
+    "title": "Notlar",
+    "addNote": "Not Ekle",
+    "placeholder": "Notunuzu buraya yazın...",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "loading": "Yükleniyor...",
+    "noNotes": "Henüz not eklenmemiş",
+    "confirmDelete": "Bu notu silmek istediğinize emin misiniz?",
+    "edit": "Düzenle",
+    "delete": "Sil"
+  },
+  "chatRoom": {
+    "online": "Çevrimiçi",
+    "search": "Ara",
+    "contactInfo": "Kişi Bilgileri",
+    "searchMessages": "Mesajlarda ara ...",
+    "typeMessage": "Buraya bir mesaj yazın ..",
+    "chooseRoom": "Oda seç",
+    "chooseContact": "Kişi seç",
+    "chooseDocument": "Belge seç",
+    "useCamera": "Kamerayı kullan",
+    "chooseImage": "Resim seç",
+    "encryptionMessage": "Mesajlar uçtan uca şifrelenmiştir. Bu sohbetin dışındaki hiç kimse, WhatsApp dahil, bunları okuyamaz veya dinleyemez. Daha fazla bilgi için tıklayın.",
+    "today": "BUGÜN",
+    "noMessages": "Henüz mesaj yok",
+    "deleteMessage": "Mesajı Sil",
+    "deleteMessageConfirm": "Bu mesajı silmek istediğinizden emin misiniz?",
+    "deleteMessageSuccess": "Mesaj başarıyla silindi.",
+    "deleteMessageError": "Mesaj silinirken bir hata oluştu.",
+    "markAsUnread": "Okunmadı Olarak İşaretle",
+    "markAsUnreadSuccess": "Mesaj okunmadı olarak işaretlendi.",
+    "markAsUnreadError": "Mesaj okunmadı olarak işaretlenirken bir hata oluştu.",
+    "pinMessage": "Mesajı Sabitle",
+    "unpinMessage": "Sabitlemeyi Kaldır",
+    "pinMessageSuccess": "Mesaj başarıyla sabitlendi.",
+    "unpinMessageSuccess": "Sabitleme başarıyla kaldırıldı.",
+    "pinMessageError": "Mesaj sabitlenirken bir hata oluştu.",
+    "starMessage": "Yıldızla",
+    "unstarMessage": "Yıldızı Kaldır"
+  },
+  "profile": {
+    "mediaLinksDocuments": "Medya, Bağlantılar ve Belgeler",
+    "aboutPhoneNumber": "Hakkında ve telefon numarası",
+    "block": "Engelle",
+    "reportContact": "Kişiyi bildir",
+    "deleteChat": "Sohbeti sil"
+  },
+  "layout": {
+    "desktopOnly": "Şu anda yalnızca masaüstü veya büyük cihazlarda kullanılabilir 😊."
+  },
+  "common": {
+    "language": "Dil",
+    "english": "English",
+    "turkish": "Türkçe"
+  },
+  "login": {
+    "title": "{{appShortName}}'a Hoş Geldiniz",
+    "subtitle": "{{appName}}'ı bilgisayarınızda kullanmak için lütfen şifrenizi girin",
+    "passwordPlaceholder": "Şifrenizi girin",
+    "button": "Giriş Yap",
+    "loading": "Giriş yapılıyor...",
+    "error": "Geçersiz şifre. Lütfen tekrar deneyin.",
+    "footer": "Geliştiren",
+    "footerLink": "Sait Yaşar"
+  },
+  "messageTypes": {
+    "selectPlaceholder": "Mesaj tiplerini seçin",
+    "loading": "Mesajlar yükleniyor...",
+    "text": "Metin",
+    "image": "Resim",
+    "video": "Video",
+    "audio": "Ses",
+    "document": "Belge",
+    "location": "Konum",
+    "contact": "Kişi",
+    "sticker": "Çıkartma"
+  },
+  "lines": {
+    "selectPlaceholder": "Hatları seçin",
+    "line1": "Hat 1",
+    "line2": "Hat 2",
+    "line3": "Hat 3"
+  },
+  "notifications": {
+    "expand": "{{count}} bildirim daha göster",
+    "collapse": "Daralt",
+    "info": "Bilgi",
+    "success": "Başarılı",
+    "error": "Hata"
+  },
+  "notFound": {
+    "title": "Sayfa bulunamadı",
+    "description": "Aradığınız sayfa mevcut değil veya taşınmış olabilir.",
+    "goHome": "Ana Sayfaya Dön",
+    "builtBy": "Geliştiren"
+  },
+  "bulkMessage": {
+    "title": "Toplu Mesaj Gönder",
+    "uploadFile": "Excel/CSV Dosyası Yükle",
+    "contactsFound": "kişi bulundu",
+    "messagePlaceholder": "Gönderilecek mesajı buraya yazın...",
+    "preview": "Önizleme",
+    "andMore": "... ve {{count}} kişi daha",
+    "send": "Gönder",
+    "sending": "Gönderiliyor",
+    "downloadTemplate": "Şablon İndir",
+    "total": "Toplam",
+    "sent": "Gönderildi",
+    "failed": "Başarısız",
+    "success": "{{count}} mesaj başarıyla gönderildi",
+    "fileError": "Dosya okunamadı. Lütfen geçerli bir CSV veya Excel dosyası yükleyin.",
+    "noContacts": "Lütfen önce bir dosya yükleyin.",
+    "noMessage": "Lütfen mesaj metnini girin.",
+    "sendError": "Mesajlar gönderilirken bir hata oluştu.",
+    "variables": "Değişkenler",
+    "addVariable": "Değişken Ekle",
+    "variableName": "Değişken adı",
+    "previewValue": "Önizleme değeri",
+    "messagePreview": "Mesaj Önizlemesi",
+    "contactsPreview": "Kişi Önizlemesi",
+    "noPreview": "Mesaj yazın ve önizleme değerlerini girin",
+    "variableCountMismatch": "Excel/CSV dosyasındaki değişken sayısı ({{found}}) tanımlı değişken sayısı ({{expected}}) ile eşleşmiyor. Lütfen Excel/CSV dosyasında {{expected}} adet değişken kolonu olduğundan emin olun.",
+    "variableCountInfo": "Tanımlı: {{defined}} | Dosyada: {{inFile}}"
+  },
+  "newMessage": {
+    "button": "Yeni Mesaj",
+    "title": "Yeni Mesaj Oluştur",
+    "phoneLabel": "Telefon Numarası",
+    "phonePlaceholder": "905551234567",
+    "nameLabel": "İsim (Opsiyonel)",
+    "namePlaceholder": "Kişi adı",
+    "create": "Oluştur",
+    "cancel": "İptal",
+    "phoneRequired": "Telefon numarası gereklidir",
+    "invalidPhone": "Geçersiz telefon numarası formatı"
+  }
+}
+

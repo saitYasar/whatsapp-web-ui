@@ -44,10 +44,13 @@ export const lightTheme: DefaultTheme = {
     readIconColor: "#0da9e5",
     unreadIconColor: "#b3b3b3",
     headerIconColor: "rgb(145, 145, 145)",
+    errorColor: "#dc3545",
   },
   alert: {
-    infoColor: "#9de1fe",
-    iconContainerColor: "white",
+    infoColor: "rgba(255, 193, 7, 0.4)", // Sarı, daha canlı
+    successColor: "rgba(40, 167, 69, 0.4)", // Yeşil, daha canlı
+    errorColor: "rgba(220, 53, 69, 0.35)", // Kırmızı, daha canlı
+    iconContainerColor: "rgba(0, 0, 0, 0.7)",
     closeIconColor: "#00000099",
   },
   badge: {

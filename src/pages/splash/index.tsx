@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useAppConfig } from "common/context/app-config";
 import {
   Container,
   EncryptionIcon,
@@ -15,6 +17,8 @@ type SplashPageProps = {
 
 export default function SplashPage(props: SplashPageProps) {
   const { progress } = props;
+  const { t } = useTranslation();
+  const { appShortName } = useAppConfig();
 
   return (
     <Container>
@@ -22,11 +26,11 @@ export default function SplashPage(props: SplashPageProps) {
         <Logo id="whatsapp" />
       </LogoWrapper>
       <Progress progess={progress} />
-      <Title>WhatsApp</Title>
+      <Title>{t("splash.title", { appShortName })}</Title>
       <SubTitle>
-        <EncryptionIcon id="lock" /> End-to-end encrypted. Built by{" "}
-        <Link href="https://github.com/jazimabbas" target="_blank">
-          Jazim Abbas
+        <EncryptionIcon id="lock" /> {t("splash.subtitle")}{" "}
+        <Link href="https://github.com/saitYasar" target="_blank">
+          {t("splash.builtBy")}
         </Link>{" "}
         ❤️.
       </SubTitle>

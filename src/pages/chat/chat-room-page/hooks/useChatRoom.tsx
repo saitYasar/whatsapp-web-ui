@@ -5,12 +5,17 @@ export default function useChatRoom() {
   const chatCtx = useChatContext();
   const [isShowIcon, setIsShowIcon] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(false);
 
-  const handleMenuOpen = (menu: "search" | "profile") => {
-    setIsSearchOpen(menu === "search" ? true : false);
-    setIsProfileOpen(menu === "profile" ? true : false);
+  const handleMenuOpen = (menu: "search" | "notes") => {
+    if (menu === "search") {
+      setIsSearchOpen(true);
+      setIsNotesOpen(false);
+    } else if (menu === "notes") {
+      setIsNotesOpen(true);
+      setIsSearchOpen(false);
+    }
   };
 
   const handleShowIcon = (state: boolean) => {
@@ -23,11 +28,11 @@ export default function useChatRoom() {
     activeInbox: chatCtx.activeChat,
     handleMenuOpen,
     handleShowIcon,
-    isProfileOpen,
     isSearchOpen,
+    isNotesOpen,
     isShowIcon,
-    setIsProfileOpen,
     setIsSearchOpen,
+    setIsNotesOpen,
     setShouldScrollToBottom,
     shouldScrollToBottom,
   };

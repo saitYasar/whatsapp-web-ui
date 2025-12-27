@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Icon from "common/components/icons";
 import {
   AttachButton,
@@ -10,16 +11,17 @@ import {
   Wrapper,
 } from "./styles";
 
-const attachButtons = [
-  { icon: "attachRooms", label: "Choose room" },
-  { icon: "attachContacts", label: "Choose contact" },
-  { icon: "attachDocument", label: "Choose document" },
-  { icon: "attachCamera", label: "Use camera" },
-  { icon: "attachImage", label: "Choose image" },
-];
-
 export default function Footer() {
   const [showIcons, setShowIcons] = useState(false);
+  const { t } = useTranslation();
+
+  const attachButtons = [
+    { icon: "attachRooms", label: t("chatRoom.chooseRoom") },
+    { icon: "attachContacts", label: t("chatRoom.chooseContact") },
+    { icon: "attachDocument", label: t("chatRoom.chooseDocument") },
+    { icon: "attachCamera", label: t("chatRoom.useCamera") },
+    { icon: "attachImage", label: t("chatRoom.chooseImage") },
+  ];
 
   return (
     <Wrapper>
@@ -35,7 +37,7 @@ export default function Footer() {
           ))}
         </ButtonsContainer>
       </IconsWrapper>
-      <Input placeholder="Type a message here .." />
+      <Input placeholder={t("chatRoom.typeMessage")} />
       <SendMessageButton>
         <Icon id="send" className="icon" />
       </SendMessageButton>

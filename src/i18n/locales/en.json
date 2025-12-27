@@ -1,0 +1,167 @@
+{
+  "splash": {
+    "title": "{{appShortName}}",
+    "subtitle": "End-to-end encrypted. Built by",
+    "builtBy": "Sait Yaşar"
+  },
+  "unselectedChat": {
+    "title": "{{appName}}",
+    "description": "Send and receive messages without keeping your phone online. Use WhatsApp on up to 4 linked devices and 1 phone at the same time.",
+    "builtBy": "Built by"
+  },
+  "sidebar": {
+    "status": "Status",
+    "newChat": "New chat",
+    "menu": "Menu",
+    "newGroup": "New group",
+    "createRoom": "Create a room",
+    "profile": "Profile",
+    "archived": "Archived",
+    "starred": "Starred",
+    "settings": "Settings",
+    "logOut": "Log out",
+    "bulkMessage": "Bulk Message",
+    "searchPlaceholder": "Search or start a new chat",
+    "noContacts": "No Contacts",
+    "importContacts": "You can import Contacts from Google",
+    "learnMore": "Learn more."
+  },
+  "chatNotes": {
+    "title": "Notes",
+    "addNote": "Add Note",
+    "placeholder": "Write your note here...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "noNotes": "No notes yet",
+    "confirmDelete": "Are you sure you want to delete this note?",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "chatRoom": {
+    "online": "Online",
+    "search": "Search",
+    "contactInfo": "Contact Info",
+    "searchMessages": "Search messages ...",
+    "typeMessage": "Type a message here ..",
+    "chooseRoom": "Choose room",
+    "chooseContact": "Choose contact",
+    "chooseDocument": "Choose document",
+    "useCamera": "Use camera",
+    "chooseImage": "Choose image",
+    "encryptionMessage": "Messages are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them. Click to learn more.",
+    "today": "TODAY",
+    "noMessages": "No messages yet",
+    "deleteMessage": "Delete Message",
+    "deleteMessageConfirm": "Are you sure you want to delete this message?",
+    "deleteMessageSuccess": "Message deleted successfully.",
+    "deleteMessageError": "An error occurred while deleting the message.",
+    "markAsUnread": "Mark as Unread",
+    "markAsUnreadSuccess": "Message marked as unread successfully.",
+    "markAsUnreadError": "An error occurred while marking message as unread.",
+    "pinMessage": "Pin Message",
+    "unpinMessage": "Unpin Message",
+    "pinMessageSuccess": "Message pinned successfully.",
+    "unpinMessageSuccess": "Message unpinned successfully.",
+    "pinMessageError": "An error occurred while pinning the message.",
+    "starMessage": "Star",
+    "unstarMessage": "Unstar"
+  },
+  "profile": {
+    "mediaLinksDocuments": "Media, Links and Documents",
+    "aboutPhoneNumber": "About and phone number",
+    "block": "Block",
+    "reportContact": "Report contact",
+    "deleteChat": "Delete chat"
+  },
+  "layout": {
+    "desktopOnly": "Currently Only available on desktop or large devices 😊."
+  },
+  "common": {
+    "language": "Language",
+    "english": "English",
+    "turkish": "Türkçe"
+  },
+  "login": {
+    "title": "Welcome to {{appShortName}}",
+    "subtitle": "To use {{appName}} on your computer, please enter your password",
+    "passwordPlaceholder": "Enter your password",
+    "button": "Login",
+    "loading": "Logging in...",
+    "error": "Invalid password. Please try again.",
+    "footer": "Built by",
+    "footerLink": "Sait Yaşar"
+  },
+  "messageTypes": {
+    "selectPlaceholder": "Select message types",
+    "loading": "Loading messages...",
+    "text": "Text",
+    "image": "Image",
+    "video": "Video",
+    "audio": "Audio",
+    "document": "Document",
+    "location": "Location",
+    "contact": "Contact",
+    "sticker": "Sticker"
+  },
+  "lines": {
+    "selectPlaceholder": "Select lines",
+    "line1": "Hat 1",
+    "line2": "Hat 2",
+    "line3": "Hat 3"
+  },
+  "notifications": {
+    "expand": "Show {{count}} more notifications",
+    "collapse": "Collapse",
+    "info": "Info",
+    "success": "Success",
+    "error": "Error"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or may have been moved.",
+    "goHome": "Go to Home",
+    "builtBy": "Built by"
+  },
+  "bulkMessage": {
+    "title": "Send Bulk Message",
+    "uploadFile": "Upload Excel/CSV File",
+    "contactsFound": "contacts found",
+    "messagePlaceholder": "Enter the message to send...",
+    "preview": "Preview",
+    "andMore": "... and {{count}} more contacts",
+    "send": "Send",
+    "sending": "Sending",
+    "downloadTemplate": "Download Template",
+    "total": "Total",
+    "sent": "Sent",
+    "failed": "Failed",
+    "success": "{{count}} messages sent successfully",
+    "fileError": "File could not be read. Please upload a valid CSV or Excel file.",
+    "noContacts": "Please upload a file first.",
+    "noMessage": "Please enter the message text.",
+    "sendError": "An error occurred while sending messages.",
+    "variables": "Variables",
+    "addVariable": "Add Variable",
+    "variableName": "Variable name",
+    "previewValue": "Preview value",
+    "messagePreview": "Message Preview",
+    "contactsPreview": "Contacts Preview",
+    "noPreview": "Enter message and preview values",
+    "variableCountMismatch": "The number of variables in the Excel/CSV file ({{found}}) does not match the defined variable count ({{expected}}). Please ensure the Excel/CSV file has {{expected}} variable columns.",
+    "variableCountInfo": "Defined: {{defined}} | In File: {{inFile}}"
+  },
+  "newMessage": {
+    "button": "New Message",
+    "title": "Create New Message",
+    "phoneLabel": "Phone Number",
+    "phonePlaceholder": "905551234567",
+    "nameLabel": "Name (Optional)",
+    "namePlaceholder": "Contact name",
+    "create": "Create",
+    "cancel": "Cancel",
+    "phoneRequired": "Phone number is required",
+    "invalidPhone": "Invalid phone number format"
+  }
+}
+

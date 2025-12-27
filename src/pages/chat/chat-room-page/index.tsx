@@ -1,25 +1,29 @@
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import ChatLayout from "../layouts";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Sidebar from "./components/sidebar";
+import ChatNotes from "./components/chat-notes";
 import Icon from "common/components/icons";
 import useChatRoom from "./hooks/useChatRoom";
-import ProfileSection from "./components/profile";
 import MessagesList from "./components/messages-list";
 import SearchSection from "./components/search-section";
 import useNavigateToChat from "./hooks/useNavigateToChat";
 import { Container, Body, Background, FooterContainer, ScrollButton } from "./styles";
 
 export default function ChatRoomPage() {
+  const { t } = useTranslation();
+  const params = useParams();
   const {
     activeInbox,
     handleMenuOpen,
     handleShowIcon,
-    isProfileOpen,
     isSearchOpen,
+    isNotesOpen,
     isShowIcon,
-    setIsProfileOpen,
     setIsSearchOpen,
+    setIsNotesOpen,
     setShouldScrollToBottom,
     shouldScrollToBottom,
   } = useChatRoom();
@@ -33,9 +37,9 @@ export default function ChatRoomPage() {
           <Header
             title={activeInbox?.name ?? ""}
             image={activeInbox?.image ?? ""}
-            subTitle={activeInbox?.isOnline ? "Online" : ""}
+            subTitle={activeInbox?.isOnline ? t("chatRoom.online") : ""}
             onSearchClick={() => handleMenuOpen("search")}
-            onProfileClick={() => handleMenuOpen("profile")}
+            onNotesClick={() => handleMenuOpen("notes")}
           />
           <MessagesList
             onShowBottomIcon={handleShowIcon}
@@ -50,15 +54,11 @@ export default function ChatRoomPage() {
             <Footer />
           </FooterContainer>
         </Body>
-        <Sidebar title="Search" isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)}>
+        <Sidebar title={t("chatRoom.search")} isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)}>
           <SearchSection />
         </Sidebar>
-        <Sidebar
-          title="Contact Info"
-          isOpen={isProfileOpen}
-          onClose={() => setIsProfileOpen(false)}
-        >
-          <ProfileSection name={activeInbox?.name ?? ""} image={activeInbox?.image ?? ""} />
+        <Sidebar title={t("chatNotes.title")} isOpen={isNotesOpen} onClose={() => setIsNotesOpen(false)}>
+          {params.id && <ChatNotes chatId={params.id} />}
         </Sidebar>
       </Container>
     </ChatLayout>
