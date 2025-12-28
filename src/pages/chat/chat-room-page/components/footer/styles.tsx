@@ -65,6 +65,7 @@ export const Input = styled.input`
   /* color: rgb(74, 74, 74); */
   background: ${(props) => props.theme.common.secondaryColor};
   color: ${(props) => props.theme.common.subHeadingColor};
+  border: none;
 
   padding: 20px 10px;
   border-radius: 10px;
@@ -85,9 +86,32 @@ export const Input = styled.input`
   &:focus {
     outline: none;
   }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
 
 export const SendMessageButton = styled.button`
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.8;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   .icon {
     margin-left: 8px;
     margin-right: 8px;

@@ -97,3 +97,25 @@ export const ContactContainer = styled.div`
   background: ${(props) => props.theme.common.secondaryColor};
   border-top: 1px solid ${(props) => props.theme.common.borderColor};
 `;
+
+export const AdminButton = styled.button`
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${(props) => props.theme.common.primaryColor};
+  }
+
+  .icon {
+    color: ${(props) => props.theme.common.tertiaryColor};
+    width: 20px;
+    height: 20px;
+  }
+`;

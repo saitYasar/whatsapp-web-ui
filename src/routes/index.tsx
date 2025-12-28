@@ -8,11 +8,20 @@ const UnSelectedChatPage = React.lazy(() => import("pages/chat/unselected-page")
 const LoginPage = React.lazy(() => import("pages/login"));
 const NotFoundPage = React.lazy(() => import("pages/404"));
 const BulkMessagePage = React.lazy(() => import("pages/bulk-message"));
+const AdminPage = React.lazy(() => import("pages/admin"));
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute>
+        <AdminPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/:id",

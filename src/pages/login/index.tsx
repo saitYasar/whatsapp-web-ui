@@ -18,6 +18,7 @@ import {
   ErrorMessage,
   FooterText,
   FooterLink,
+  AdminButton,
 } from "./styles";
 
 export default function LoginPage() {
@@ -43,7 +44,30 @@ export default function LoginPage() {
     try {
       const result = await login(password);
       if (result.success) {
-        navigate("/");
+        // If admin, navigate to admin page, otherwise to home
+        if (result.isAdmin) {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+      } else {
+        setError(result.error || t("login.error"));
+      }
+    } catch (err) {
+      setError(t("login.error"));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAdminLogin = async () => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const result = await login("65432");
+      if (result.success) {
+        navigate("/admin");
       } else {
         setError(result.error || t("login.error"));
       }
@@ -85,6 +109,14 @@ export default function LoginPage() {
             {isLoading ? t("login.loading") : t("login.button")}
           </Button>
         </Form>
+
+        <AdminButton
+          type="button"
+          onClick={handleAdminLogin}
+          disabled={isLoading}
+        >
+          {t("login.adminButton")}
+        </AdminButton>
 
         <FooterText>
           {t("login.footer")}{" "}

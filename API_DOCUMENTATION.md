@@ -2569,6 +2569,1015 @@ curl -X DELETE "http://localhost:3000/api/chats/chat-123/notes/note-456" \
 
 ---
 
+## Authentication API
+
+### 1. Login
+
+**Endpoint:** `POST /api/auth/login`
+
+**Description:** Authenticates user with password and returns a JWT token for subsequent API calls.
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "password": "user_password"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "user-123",
+    "name": "John Doe",
+    "email": "john@example.com"
+  }
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Invalid password"
+}
+```
+
+**Status Codes:**
+- `200 OK`: Login successful
+- `401 Unauthorized`: Invalid credentials
+- `500 Internal Server Error`: Server error
+
+---
+
+## Authentication Implementation Notes
+
+### Frontend Behavior
+
+1. **Login Page:**
+   - User enters password
+   - On submit, calls login API
+   - Stores token in `localStorage` with key `whatsapp_web_token`
+   - Redirects to home page on success
+   - Shows error message on failure
+
+2. **Token Management:**
+   - Token stored in `localStorage`
+   - Token included in all API requests as `Authorization: Bearer {token}`
+   - Token checked on app load
+   - If token exists and valid, user stays authenticated
+   - If token invalid/expired, redirect to login
+
+3. **Protected Routes:**
+   - All routes except `/login` require authentication
+   - `ProtectedRoute` component checks authentication
+   - Redirects to `/login` if not authenticated
+
+### Backend Requirements
+
+1. **Password Validation:**
+   - Validate password against database
+   - Use secure password hashing (bcrypt, argon2, etc.)
+   - Implement rate limiting to prevent brute force attacks
+
+2. **JWT Token:**
+   - Generate JWT token with user ID and expiration
+   - Token expiration: 24 hours (or configurable)
+   - Include user information in token payload
+
+3. **Security:**
+   - Use HTTPS in production
+   - Implement rate limiting (e.g., 5 attempts per 15 minutes)
+   - Log failed login attempts
+   - Consider implementing 2FA for additional security
+
+### Example Implementation (Node.js/Express)
+
+```javascript
+// POST /api/auth/login
+router.post('/auth/login', async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Password is required'
+      });
+    }
+
+    // Validate password (example: check against database)
+    const user = await User.findOne({ /* find user */ });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid password'
+      });
+    }
+
+    const isValid = await bcrypt.compare(password, user.hashedPassword);
+    if (!isValid) {
+      // Log failed attempt
+      await logFailedLoginAttempt(req.ip, user.id);
+      
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid password'
+      });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'An error occurred during login'
+    });
+  }
+});
+```
+
+### Example cURL Commands
+
+```bash
+# Login
+curl -X POST "http://localhost:3000/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "password": "user_password"
+  }'
+```
+
+---
+
+## Chat List (Inbox) API
+
+### 1. Get Chat List
+
+**Endpoint:** `GET /api/chats`
+
+**Description:** Returns list of all chats (inbox) for the authenticated user. Can be filtered by lines and search query.
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Query Parameters:**
+- `lines` (optional): Comma-separated list of line IDs to filter by (e.g., `line1,line2`)
+- `search` (optional): Search query to filter chats by name or last message
+- `page` (optional): Page number for pagination (default: 1)
+- `limit` (optional): Number of chats per page (default: 50)
+
+**Response:**
+```json
+{
+  "success": true,
+  "chats": [
+    {
+      "id": "chat-123",
+      "name": "John Doe",
+      "image": "/assets/images/placeholder.jpeg",
+      "lastMessage": "Hello, how are you?",
+      "timestamp": "14:30",
+      "date": "20/02/2023",
+      "messageStatus": "READ",
+      "isOnline": false,
+      "isPinned": true,
+      "notificationsCount": 5,
+      "lineId": "line1",
+      "notes": "Important meeting tomorrow",
+      "notesCount": 3
+    }
+  ],
+  "total": 25,
+  "page": 1,
+  "limit": 50,
+  "hasMore": false
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Unauthorized"
+}
+```
+
+---
+
+### 2. Update Selected Lines
+
+**Endpoint:** `PUT /api/lines/selected`
+
+**Description:** Updates the selected lines filter for the authenticated user. This affects which chats are shown in the inbox.
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "lines": ["line1", "line2"]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Selected lines updated successfully"
+}
+```
+
+---
+
+## Chat List Implementation Notes
+
+### Frontend Behavior
+
+1. **Initial Load:**
+   - Fetch chat list on app load
+   - Apply default line filter (first line selected)
+   - Display chats sorted by last message timestamp (newest first)
+
+2. **Line Filtering:**
+   - User can select multiple lines
+   - When lines change, fetch filtered chat list
+   - Update selected lines via API
+
+3. **Search:**
+   - Search by chat name or last message content
+   - Real-time filtering (client-side or server-side)
+   - Clear search to show all chats
+
+4. **Real-time Updates:**
+   - Poll for new messages/chats (optional)
+   - WebSocket connection for real-time updates (optional)
+   - Update chat list when new message arrives
+
+### Backend Requirements
+
+1. **Database Query:**
+   - Join `chats` with `messages` to get last message
+   - Filter by `lineId` if lines parameter provided
+   - Filter by search query if provided
+   - Sort by last message timestamp DESC
+   - Support pagination
+
+2. **Performance:**
+   - Index on `lineId`, `lastMessageAt`, `userId`
+   - Cache frequently accessed chat lists
+   - Limit number of chats per page
+
+### Example Implementation (Node.js/Express)
+
+```javascript
+// GET /api/chats
+router.get('/chats', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { lines, search, page = 1, limit = 50 } = req.query;
+
+    // Build query
+    const where = { userId };
+    
+    if (lines) {
+      const lineArray = lines.split(',');
+      where.lineId = { [Op.in]: lineArray };
+    }
+
+    // Get chats with last message
+    const chats = await Chat.findAll({
+      where,
+      include: [
+        {
+          model: Message,
+          as: 'lastMessage',
+          required: false,
+          order: [['createdAt', 'DESC']],
+          limit: 1
+        },
+        {
+          model: ChatNote,
+          as: 'notes',
+          required: false,
+          order: [['createdAt', 'DESC']],
+          limit: 1,
+          attributes: ['content', 'createdAt']
+        }
+      ],
+      order: [['updatedAt', 'DESC']],
+      limit: parseInt(limit),
+      offset: (parseInt(page) - 1) * parseInt(limit)
+    });
+
+    // Apply search filter if provided
+    let filteredChats = chats;
+    if (search) {
+      const searchLower = search.toLowerCase();
+      filteredChats = chats.filter(chat => 
+        chat.name.toLowerCase().includes(searchLower) ||
+        chat.lastMessage?.body?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Format response
+    const formattedChats = filteredChats.map(chat => ({
+      id: chat.id,
+      name: chat.name,
+      image: chat.image || "/assets/images/placeholder.jpeg",
+      lastMessage: chat.lastMessage?.body || "",
+      timestamp: formatTime(chat.lastMessage?.createdAt || chat.updatedAt),
+      date: formatDate(chat.lastMessage?.createdAt || chat.updatedAt),
+      messageStatus: chat.lastMessage?.messageStatus || "SENT",
+      isOnline: chat.isOnline || false,
+      isPinned: chat.isPinned || false,
+      notificationsCount: chat.notificationsCount || 0,
+      lineId: chat.lineId,
+      notes: chat.notes?.[0]?.content?.substring(0, 50) || null,
+      notesCount: await ChatNote.count({ where: { chatId: chat.id } })
+    }));
+
+    res.json({
+      success: true,
+      chats: formattedChats,
+      total: filteredChats.length,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      hasMore: filteredChats.length === parseInt(limit)
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+```
+
+### Example cURL Commands
+
+```bash
+# Get chat list
+curl -X GET "http://localhost:3000/api/chats?lines=line1,line2&page=1&limit=50" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get chat list with search
+curl -X GET "http://localhost:3000/api/chats?search=john&lines=line1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+---
+
+## Lines API
+
+### 1. Get Available Lines
+
+**Endpoint:** `GET /api/lines`
+
+**Description:** Returns all available lines (phone numbers) that the authenticated user has access to.
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "lines": [
+    {
+      "id": "line1",
+      "phoneNumber": "+90 555 111 2233",
+      "label": "Hat 1",
+      "labelKey": "lines.line1"
+    },
+    {
+      "id": "line2",
+      "phoneNumber": "+90 555 222 3344",
+      "label": "Hat 2",
+      "labelKey": "lines.line2"
+    },
+    {
+      "id": "line3",
+      "phoneNumber": "+90 555 333 4455",
+      "label": "Hat 3",
+      "labelKey": "lines.line3"
+    }
+  ],
+  "defaultSelected": ["line1"]
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Unauthorized"
+}
+```
+
+---
+
+### 2. Update Selected Lines
+
+**Endpoint:** `PUT /api/lines/selected`
+
+**Description:** Updates the selected lines for the authenticated user. This affects which chats are shown in the inbox.
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "lines": ["line1", "line2"]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Selected lines updated successfully",
+  "selectedLines": ["line1", "line2"]
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Invalid line IDs"
+}
+```
+
+---
+
+## Lines Implementation Notes
+
+### Frontend Behavior
+
+1. **Line Selection:**
+   - Multi-select component for lines
+   - First line selected by default
+   - When lines change, chat list is filtered
+
+2. **Default Selection:**
+   - API returns `defaultSelected` array
+   - Frontend uses this to set initial selection
+   - User can change selection anytime
+
+### Backend Requirements
+
+1. **Database Schema:**
+   ```sql
+   CREATE TABLE lines (
+     id VARCHAR(255) PRIMARY KEY,
+     phone_number VARCHAR(20) NOT NULL,
+     label VARCHAR(100) NOT NULL,
+     label_key VARCHAR(100),
+     user_id VARCHAR(255),
+     is_active BOOLEAN DEFAULT TRUE,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+
+   CREATE TABLE user_selected_lines (
+     id VARCHAR(255) PRIMARY KEY,
+     user_id VARCHAR(255) NOT NULL,
+     line_id VARCHAR(255) NOT NULL,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (user_id) REFERENCES users(id),
+     FOREIGN KEY (line_id) REFERENCES lines(id),
+     UNIQUE(user_id, line_id)
+   );
+   ```
+
+2. **Authorization:**
+   - Only return lines user has access to
+   - Check user permissions for each line
+
+### Example Implementation (Node.js/Express)
+
+```javascript
+// GET /api/lines
+router.get('/lines', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Get all lines user has access to
+    const lines = await Line.findAll({
+      where: {
+        isActive: true,
+        userId: userId // Or check user permissions
+      },
+      order: [['label', 'ASC']]
+    });
+
+    // Get user's default selected lines
+    const userSelectedLines = await UserSelectedLine.findAll({
+      where: { userId },
+      include: [{ model: Line }]
+    });
+
+    const defaultSelected = userSelectedLines.map(usl => usl.lineId);
+
+    res.json({
+      success: true,
+      lines: lines.map(line => ({
+        id: line.id,
+        phoneNumber: line.phoneNumber,
+        label: line.label,
+        labelKey: line.labelKey
+      })),
+      defaultSelected: defaultSelected.length > 0 ? defaultSelected : [lines[0]?.id]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/lines/selected
+router.put('/lines/selected', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { lines } = req.body;
+
+    if (!Array.isArray(lines)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Lines must be an array'
+      });
+    }
+
+    // Validate line IDs
+    const validLines = await Line.findAll({
+      where: {
+        id: { [Op.in]: lines },
+        isActive: true
+      }
+    });
+
+    if (validLines.length !== lines.length) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid line IDs'
+      });
+    }
+
+    // Update user's selected lines
+    await UserSelectedLine.destroy({ where: { userId } });
+    
+    await UserSelectedLine.bulkCreate(
+      lines.map(lineId => ({
+        id: `usl-${Date.now()}-${Math.random()}`,
+        userId,
+        lineId
+      }))
+    );
+
+    res.json({
+      success: true,
+      message: 'Selected lines updated successfully',
+      selectedLines: lines
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+```
+
+### Example cURL Commands
+
+```bash
+# Get lines
+curl -X GET "http://localhost:3000/api/lines" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Update selected lines
+curl -X PUT "http://localhost:3000/api/lines/selected" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "lines": ["line1", "line2"]
+  }'
+```
+
+---
+
+## Search Messages API
+
+### 1. Search Messages in Chat
+
+**Endpoint:** `GET /api/chats/:chatId/messages/search`
+
+**Description:** Searches for messages within a specific chat based on search query.
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Query Parameters:**
+- `q` (required): Search query string
+- `page` (optional): Page number for pagination (default: 1)
+- `limit` (optional): Number of results per page (default: 20)
+
+**Response:**
+```json
+{
+  "success": true,
+  "messages": [
+    {
+      "id": "msg-123",
+      "body": "Hello, how are you?",
+      "date": "20/02/2023",
+      "timestamp": "12:30",
+      "messageStatus": "READ",
+      "isOpponent": false,
+      "type": "text",
+      "highlight": "Hello, <mark>how</mark> are you?"
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "limit": 20,
+  "query": "how"
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Chat not found or unauthorized"
+}
+```
+
+---
+
+### 2. Search Messages Across All Chats
+
+**Endpoint:** `GET /api/messages/search`
+
+**Description:** Searches for messages across all chats the user has access to.
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Query Parameters:**
+- `q` (required): Search query string
+- `chatId` (optional): Filter by specific chat ID
+- `page` (optional): Page number for pagination (default: 1)
+- `limit` (optional): Number of results per page (default: 20)
+
+**Response:**
+```json
+{
+  "success": true,
+  "messages": [
+    {
+      "id": "msg-123",
+      "chatId": "chat-456",
+      "chatName": "John Doe",
+      "body": "Hello, how are you?",
+      "date": "20/02/2023",
+      "timestamp": "12:30",
+      "messageStatus": "READ",
+      "isOpponent": false,
+      "type": "text",
+      "highlight": "Hello, <mark>how</mark> are you?"
+    }
+  ],
+  "total": 15,
+  "page": 1,
+  "limit": 20,
+  "query": "how"
+}
+```
+
+---
+
+## Search Messages Implementation Notes
+
+### Frontend Behavior
+
+1. **Search Section:**
+   - Search input in chat room header
+   - Real-time search as user types (debounced)
+   - Display search results below input
+   - Highlight matching text in results
+
+2. **Search Results:**
+   - Show message preview with context
+   - Click result to navigate to message in chat
+   - Highlight search term in results
+
+### Backend Requirements
+
+1. **Full-Text Search:**
+   - Use database full-text search (PostgreSQL, MySQL, etc.)
+   - Or use Elasticsearch for advanced search
+   - Index message body content
+
+2. **Performance:**
+   - Limit search results per page
+   - Cache frequent searches
+   - Use database indexes
+
+### Example Implementation (Node.js/Express)
+
+```javascript
+// GET /api/chats/:chatId/messages/search
+router.get('/chats/:chatId/messages/search', authenticate, async (req, res) => {
+  try {
+    const { chatId } = req.params;
+    const { q, page = 1, limit = 20 } = req.query;
+    const userId = req.user.id;
+
+    if (!q || q.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Search query is required'
+      });
+    }
+
+    // Validate user has access to chat
+    const chat = await Chat.findOne({
+      where: { id: chatId },
+      include: [{ model: ChatMember, where: { userId } }]
+    });
+
+    if (!chat) {
+      return res.status(404).json({
+        success: false,
+        error: 'Chat not found or unauthorized'
+      });
+    }
+
+    // Search messages (using PostgreSQL full-text search example)
+    const messages = await Message.findAll({
+      where: {
+        chatId,
+        body: { [Op.like]: `%${q}%` }
+      },
+      order: [['createdAt', 'DESC']],
+      limit: parseInt(limit),
+      offset: (parseInt(page) - 1) * parseInt(limit)
+    });
+
+    // Highlight search term in results
+    const highlightedMessages = messages.map(msg => ({
+      ...msg.toJSON(),
+      highlight: msg.body.replace(
+        new RegExp(q, 'gi'),
+        (match) => `<mark>${match}</mark>`
+      )
+    }));
+
+    res.json({
+      success: true,
+      messages: highlightedMessages,
+      total: messages.length,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      query: q
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+```
+
+### Example cURL Commands
+
+```bash
+# Search messages in chat
+curl -X GET "http://localhost:3000/api/chats/chat-123/messages/search?q=hello&page=1&limit=20" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Search messages across all chats
+curl -X GET "http://localhost:3000/api/messages/search?q=meeting&page=1&limit=20" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+---
+
+## Send Message API
+
+### 1. Send Message
+
+**Endpoint:** `POST /api/chats/:chatId/messages`
+
+**Description:** Sends a new message to a specific chat.
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "body": "Hello, how are you?",
+  "type": "text"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": {
+    "id": "msg-789",
+    "chatId": "chat-123",
+    "body": "Hello, how are you?",
+    "date": "20/02/2023",
+    "timestamp": "14:35",
+    "messageStatus": "SENT",
+    "isOpponent": false,
+    "type": "text",
+    "createdAt": "2024-01-15T14:35:00Z"
+  }
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Chat not found or unauthorized"
+}
+```
+
+---
+
+## Send Message Implementation Notes
+
+### Frontend Behavior
+
+1. **Message Input:**
+   - User types message in footer input
+   - Press Enter or click send button
+   - Message sent immediately
+   - Optimistic update: message appears in chat immediately
+   - Update message status when delivery confirmed
+
+2. **Message Types:**
+   - Text messages: plain text
+   - Media messages: file upload required
+   - Location messages: coordinates required
+   - Contact messages: contact data required
+
+### Backend Requirements
+
+1. **Message Creation:**
+   - Create message record in database
+   - Set `messageStatus` to "SENT"
+   - Associate with chat and sender
+   - Return created message
+
+2. **Message Delivery:**
+   - Integrate with messaging service (WhatsApp Business API, etc.)
+   - Update message status when delivered/read
+   - Webhook for delivery status updates
+
+### Example Implementation (Node.js/Express)
+
+```javascript
+// POST /api/chats/:chatId/messages
+router.post('/chats/:chatId/messages', authenticate, async (req, res) => {
+  try {
+    const { chatId } = req.params;
+    const { body, type = 'text' } = req.body;
+    const userId = req.user.id;
+
+    if (!body || body.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Message body is required'
+      });
+    }
+
+    // Validate user has access to chat
+    const chat = await Chat.findOne({
+      where: { id: chatId },
+      include: [{ model: ChatMember, where: { userId } }]
+    });
+
+    if (!chat) {
+      return res.status(404).json({
+        success: false,
+        error: 'Chat not found or unauthorized'
+      });
+    }
+
+    // Create message
+    const message = await Message.create({
+      id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      chatId,
+      senderId: userId,
+      body: body.trim(),
+      type,
+      messageStatus: 'SENT',
+      isOpponent: false,
+      createdAt: new Date()
+    });
+
+    // Update chat's last message timestamp
+    await Chat.update(
+      { updatedAt: new Date() },
+      { where: { id: chatId } }
+    );
+
+    // Send message via messaging service (WhatsApp Business API, etc.)
+    // await sendMessageViaService(chat.phoneNumber, body);
+
+    res.json({
+      success: true,
+      message: {
+        id: message.id,
+        chatId: message.chatId,
+        body: message.body,
+        date: formatDate(message.createdAt),
+        timestamp: formatTime(message.createdAt),
+        messageStatus: message.messageStatus,
+        isOpponent: false,
+        type: message.type,
+        createdAt: message.createdAt
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+```
+
+### Example cURL Commands
+
+```bash
+# Send message
+curl -X POST "http://localhost:3000/api/chats/chat-123/messages" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "body": "Hello, how are you?",
+    "type": "text"
+  }'
+```
+
+---
+
 ## Message Deletion API
 
 ### 1. Delete Message

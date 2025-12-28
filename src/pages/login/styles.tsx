@@ -143,4 +143,28 @@ export const FooterLink = styled.a`
   }
 `;
 
+export const AdminButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: ${(props) => props.theme.common.tertiaryColor};
+  border: 1px solid ${(props) => props.theme.common.tertiaryColor};
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+
+  &:hover:not(:disabled) {
+    background: ${(props) => props.theme.common.tertiaryColor};
+    color: white;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
 

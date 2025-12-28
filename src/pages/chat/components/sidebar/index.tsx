@@ -9,6 +9,7 @@ import OptionsMenu from "../option-menu";
 import SearchField from "../search-field";
 import MultiSelect from "common/components/multi-select";
 import NewMessage from "../new-message";
+import Icon from "common/components/icons";
 import { useAppTheme } from "common/theme";
 import useLanguage from "common/hooks/useLanguage";
 import { useAuth } from "common/context/auth";
@@ -24,6 +25,7 @@ import {
   LanguageText,
   SidebarContainer,
   ThemeIconContainer,
+  AdminButton,
 } from "./styles";
 
 export default function Sidebar() {
@@ -32,7 +34,7 @@ export default function Sidebar() {
   const chatCtx = useChatContext();
   const { t } = useTranslation();
   const { changeLanguage, currentLanguage } = useLanguage();
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const { lines, selectedLines: hookSelectedLines, updateSelectedLines } = useLines();
 
   // Sync hook selectedLines with context
@@ -99,7 +101,13 @@ export default function Sidebar() {
       handleLogout();
     } else if (option === t("sidebar.bulkMessage")) {
       navigate("/bulk-message");
+    } else if (option === t("sidebar.adminPanel")) {
+      navigate("/admin");
     }
+  };
+
+  const handleAdminClick = () => {
+    navigate("/admin");
   };
 
   const handleLinesChange = async (newSelectedLines: string[]) => {
@@ -119,12 +127,18 @@ export default function Sidebar() {
           </LanguageIconContainer>
   
 
+          {isAdmin && (
+            <AdminButton onClick={handleAdminClick} title={t("sidebar.adminPanel")}>
+              <Icon id="menu" className="icon" />
+            </AdminButton>
+          )}
           <OptionsMenu
             iconClassName="icon"
             className="icon"
             ariaLabel={t("sidebar.menu")}
             iconId="menu"
             options={[
+              ...(isAdmin ? [t("sidebar.adminPanel")] : []),
               t("sidebar.bulkMessage"),
               t("sidebar.archived"),
               t("sidebar.starred"),

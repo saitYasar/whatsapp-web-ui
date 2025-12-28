@@ -35,8 +35,8 @@ import {
 
 type Contact = {
   phone: string;
-  name?: string;
-  message?: string;
+  name?: string;  
+  message?: string; 
   variables?: Record<string, string>;
 };
 
@@ -54,7 +54,7 @@ export default function BulkMessagePage() {
     { name: "degisken_1", previewValue: "" },
     { name: "degisken_2", previewValue: "" },
     { name: "degisken_3", previewValue: "" },
-  ]);
+  ]);   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
