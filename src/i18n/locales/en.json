@@ -192,6 +192,14 @@
     "goHome": "Go to Home",
     "builtBy": "Built by"
   },
+  "error": {
+    "title": "An Error Occurred",
+    "description": "Sorry, an unexpected error occurred. Please reload the page or go back to home.",
+    "chunkError": "An error occurred while loading the page. Please reload the page.",
+    "reload": "Reload Page",
+    "goHome": "Go to Home",
+    "builtBy": "Built by"
+  },
   "bulkMessage": {
     "title": "Send Bulk Message",
     "uploadFile": "Upload Excel/CSV File",
